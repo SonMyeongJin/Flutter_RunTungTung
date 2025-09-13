@@ -99,9 +99,44 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Center(
               child: FractionallySizedBox(
                 widthFactor: widthFactor, // 기본 60%, sleep1은 48%
-                child: Image.asset(
-                  _currentImage,
-                  fit: BoxFit.contain,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // 캐릭터 이미지
+                    Positioned.fill(
+                      child: Image.asset(
+                        _currentImage,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    // sleep 모드에서만 우측 상단에 'zzZ' 오버레이
+                    if (_mode == 'sleep')
+                      Positioned(
+                        right: -4,
+                        top: 230,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                            child: Text(
+                              'zzZ',
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.indigo.shade400,
+                                letterSpacing: 0.5,
+                                shadows: const [
+                                  Shadow(offset: Offset(1, 1), blurRadius: 2, color: Colors.black26),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
