@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -39,17 +40,46 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  // 현재 보여줄 이미지 경로
+  String _currentImage = 'assets/images/run1.png';
+  // 애니메이션 타이머
+  Timer? _timer;
+  // 현재 프레임 인덱스 (0 또는 1)
+  int _frame = 0;
+  // 현재 모드: 'run' 또는 'sleep'
+  String _mode = 'run';
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startAnimation(String mode) {
+    // 모드가 변경되면 프레임 초기화
+    _mode = mode;
+    _frame = 0;
+    _updateImage();
+
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(milliseconds: 300), (_) {
+      setState(() {
+        _frame = (_frame + 1) % 2; // 0,1 반복
+        _updateImage();
+      });
     });
+  }
+
+  void _updateImage() {
+    if (_mode == 'run') {
+      _currentImage = _frame == 0
+          ? 'assets/images/run1.png'
+          : 'assets/images/run2.png';
+    } else {
+      _currentImage = _frame == 0
+          ? 'assets/images/sleep1.png'
+          : 'assets/images/sleep2.png';
+    }
   }
 
   @override
@@ -59,28 +89,46 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              '테스트 화면입니다',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Image.asset(
+                _currentImage,
+                fit: BoxFit.contain,
+              ),
             ),
-            const SizedBox(height: 12),
-            const Text('버튼을 눌러 숫자를 올려보세요'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _startAnimation('run'),
+                      icon: const Icon(Icons.directions_run),
+                      label: const Text('달리기'),
+                      style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _startAnimation('sleep'),
+                      icon: const Icon(Icons.bedtime),
+                      label: const Text('잠자기'),
+                      style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // 플로팅 버튼 제거
     );
   }
 }
