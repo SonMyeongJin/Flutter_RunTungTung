@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _updateImage();
 
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(milliseconds: 300), (_) {
+  _timer = Timer.periodic(const Duration(milliseconds: 600), (_) {
       setState(() {
         _frame = (_frame + 1) % 2; // 0,1 반복
         _updateImage();
@@ -84,6 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+  // 기본 이미지 폭: 화면 가로의 60%, sleep2는 80%로 더 축소(= 0.48)
+  const double baseWidthFactor = 0.6;
+  final bool isSleep2 = (_mode == 'sleep' && _frame == 1);
+  final double widthFactor = isSleep2 ? baseWidthFactor * 0.8 : baseWidthFactor;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -93,9 +97,12 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Expanded(
             child: Center(
-              child: Image.asset(
-                _currentImage,
-                fit: BoxFit.contain,
+              child: FractionallySizedBox(
+                widthFactor: widthFactor, // 기본 60%, sleep2는 48%
+                child: Image.asset(
+                  _currentImage,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
