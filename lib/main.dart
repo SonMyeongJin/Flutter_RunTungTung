@@ -84,10 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-  // 기본 이미지 폭: 화면 가로의 60%, sleep2는 80%로 더 축소(= 0.48)
+  // 기본 이미지 폭: 화면 가로의 60%, sleep1은 80%로 축소(= 0.48)
   const double baseWidthFactor = 0.6;
-  final bool isSleep2 = (_mode == 'sleep' && _frame == 1);
-  final double widthFactor = isSleep2 ? baseWidthFactor * 0.8 : baseWidthFactor;
+  final bool isSleep1 = (_mode == 'sleep' && _frame == 0);
+  final double widthFactor = isSleep1 ? baseWidthFactor * 0.8 : baseWidthFactor;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: Center(
               child: FractionallySizedBox(
-                widthFactor: widthFactor, // 기본 60%, sleep2는 48%
+                widthFactor: widthFactor, // 기본 60%, sleep1은 48%
                 child: Image.asset(
                   _currentImage,
                   fit: BoxFit.contain,
