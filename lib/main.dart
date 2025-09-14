@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
-      home: const MyHomePage(title: '테스트 화면'),
+      home: const MyHomePage(title: '달리는 퉁퉁이'),
     );
   }
 }
@@ -88,11 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
   const double baseWidthFactor = 0.6;
   final bool isSleep1 = (_mode == 'sleep' && _frame == 0);
   final double widthFactor = isSleep1 ? baseWidthFactor * 0.8 : baseWidthFactor;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
+  return Scaffold(
       body: Column(
         children: [
           Expanded(
