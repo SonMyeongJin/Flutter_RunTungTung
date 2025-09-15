@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'run.dart';
 
 class SleepScreen extends StatefulWidget {
   const SleepScreen({super.key});
@@ -13,6 +15,8 @@ class _SleepScreenState extends State<SleepScreen> {
   Timer? _timer;
   int _frame = 0; // 0 or 1
   late final DateTime _startAt;
+  StreamSubscription<Position>? _posSub;
+  bool _navigated = false;
 
   @override
   void initState() {
@@ -26,11 +30,47 @@ class _SleepScreenState extends State<SleepScreen> {
             : 'assets/images/sleep2.png';
       });
     });
+
+    _startMovementDetection();
+  }
+
+  Future<void> _startMovementDetection() async {
+    try {
+      var perm = await Geolocator.checkPermission();
+      if (perm == LocationPermission.denied) {
+        perm = await Geolocator.requestPermission();
+      }
+      if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
+        return;
+      }
+
+      const settings = LocationSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 5,
+      );
+
+      _posSub = Geolocator.getPositionStream(locationSettings: settings).listen((pos) {
+        if (_navigated) return;
+        final v = pos.speed; // m/s
+        if (v.isFinite && v > 1.0) {
+          _navigated = true;
+          _posSub?.cancel();
+          if (mounted) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const RunScreen()),
+            );
+          }
+        }
+      });
+    } catch (_) {
+      // ignore errors
+    }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+  _posSub?.cancel();
     super.dispose();
   }
 
@@ -64,7 +104,7 @@ class _SleepScreenState extends State<SleepScreen> {
                       child: Center(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.35),
+                            color: Colors.black.withValues(alpha: 0.35),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Padding(
@@ -75,7 +115,7 @@ class _SleepScreenState extends State<SleepScreen> {
                                 final h = elapsed.inHours;
                                 final m = elapsed.inMinutes % 60;
                                 return Text(
-                                  '${h}시간 ${m}분째 숙면중',
+                                  '$h시간 $m분째 숙면중',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w700,

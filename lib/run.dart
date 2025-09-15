@@ -80,7 +80,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                       child: Center(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.35),
+                            color: Colors.black.withValues(alpha: 0.35),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Padding(
@@ -115,14 +115,14 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                                     position: _windSlide1,
                                     child: FadeTransition(
                                       opacity: _windFade1,
-                                      child: Icon(Icons.air, size: 30, color: Colors.blueGrey.withOpacity(0.55)),
+                                      child: Icon(Icons.air, size: 30, color: Colors.blueGrey.withValues(alpha: 0.55)),
                                     ),
                                   ),
                                   SlideTransition(
                                     position: _windSlide2,
                                     child: FadeTransition(
                                       opacity: _windFade2,
-                                      child: Icon(Icons.air, size: 22, color: Colors.blueGrey.withOpacity(0.40)),
+                                      child: Icon(Icons.air, size: 22, color: Colors.blueGrey.withValues(alpha: 0.40)),
                                     ),
                                   ),
                                 ],
