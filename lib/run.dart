@@ -187,11 +187,11 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 30),
             child: Text(
               '${_distanceMeters.toStringAsFixed(0)}m / ${_goalMeters}m',
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 40,
                 fontWeight: FontWeight.w700,
               ),
             ),
