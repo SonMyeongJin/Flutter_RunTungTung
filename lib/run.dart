@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class RunScreen extends StatefulWidget {
   const RunScreen({super.key});
@@ -13,6 +14,10 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
   Timer? _timer;
   int _frame = 0; // 0 or 1
   late final DateTime _startAt;
+  static const int _goalMeters = 6000;
+  double _distanceMeters = 0;
+  Position? _lastPos;
+  StreamSubscription<Position>? _posSub;
 
   // Wind animation
   late final AnimationController _windController;
@@ -43,13 +48,57 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     _windFade1 = CurvedAnimation(parent: _windController, curve: Curves.easeInOut);
     _windFade2 = CurvedAnimation(parent: _windController, curve: const Interval(0.2, 1.0, curve: Curves.easeInOut));
     _windController.repeat(reverse: true);
+
+  _startDistanceTracking();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _posSub?.cancel();
     _windController.dispose();
     super.dispose();
+  }
+
+  Future<void> _startDistanceTracking() async {
+    try {
+      var perm = await Geolocator.checkPermission();
+      if (perm == LocationPermission.denied) {
+        perm = await Geolocator.requestPermission();
+      }
+      if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
+        return;
+      }
+
+      const settings = LocationSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 3, // 최소 3m 이동 시 업데이트
+      );
+
+      _posSub = Geolocator.getPositionStream(locationSettings: settings).listen((pos) {
+        if (_lastPos == null) {
+          _lastPos = pos;
+          return;
+        }
+        final d = Geolocator.distanceBetween(
+          _lastPos!.latitude,
+          _lastPos!.longitude,
+          pos.latitude,
+          pos.longitude,
+        );
+        // 잡음 방지: 너무 큰 점프는 무시, 0.3m 이하 미세 이동 무시
+        if (d.isFinite && d > 0.3 && d < 100) {
+          setState(() {
+            _distanceMeters += d;
+            _lastPos = pos;
+          });
+        } else {
+          _lastPos = pos;
+        }
+      });
+    } catch (_) {
+      // ignore errors (권한/센서 이슈 등)
+    }
   }
 
   @override
@@ -134,6 +183,16 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
                     ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Text(
+              '${_distanceMeters.toStringAsFixed(0)}m / ${_goalMeters}m',
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
