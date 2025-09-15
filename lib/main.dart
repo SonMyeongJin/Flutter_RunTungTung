@@ -107,51 +107,52 @@ class _MyHomePageState extends State<MyHomePage> {
                         fit: BoxFit.contain,
                       ),
                     ),
-                    // 경과 시간 오버레이 (모드 시작 이후에만 표시)
                     if (_modeStart != null)
                       Positioned(
-                        left: 8,
-                        bottom: 8,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.35),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            child: Builder(
-                              builder: (context) {
-                                final now = DateTime.now();
-                                final start = _modeStart!;
-                                final elapsed = now.difference(start);
-                                if (_mode == 'run') {
-                                  final m = elapsed.inMinutes;
-                                  return Text(
-                                    '$m분째 런닝중',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    ),
-                                  );
-                                } else {
-                                  final h = elapsed.inHours;
-                                  final m = elapsed.inMinutes % 60;
-                                  return Text(
-                                    '${h}시간 ${m}분째 숙면중',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    ),
-                                  );
-                                }
-                              },
+                        top: 150,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.35),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
+                              child: Builder(
+                                builder: (context) {
+                                  final now = DateTime.now();
+                                  final start = _modeStart!;
+                                  final elapsed = now.difference(start);
+                                  if (_mode == 'run') {
+                                    final m = elapsed.inMinutes;
+                                    return Text(
+                                      '$m분째 런닝중',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 30,
+                                      ),
+                                    );
+                                  } else {
+                                    final h = elapsed.inHours;
+                                    final m = elapsed.inMinutes % 60;
+                                    return Text(
+                                      '${h}시간 ${m}분째 숙면중',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 30,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    // sleep 모드에서만 우측 상단에 'zzZ' 오버레이
                     if (_mode == 'sleep')
                       Positioned(
                         right: -4,
