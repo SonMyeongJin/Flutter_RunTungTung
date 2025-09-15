@@ -48,6 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _frame = 0;
   // 현재 모드: 'run' 또는 'sleep'
   String _mode = 'run';
+    // 현재 모드 시작 시각 (경과 시간 표시에 사용)
+    DateTime? _modeStart;
 
   @override
   void dispose() {
@@ -59,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // 모드가 변경되면 프레임 초기화
     _mode = mode;
     _frame = 0;
+      _modeStart = DateTime.now();
     _updateImage();
 
     _timer?.cancel();
@@ -105,6 +108,50 @@ class _MyHomePageState extends State<MyHomePage> {
                         fit: BoxFit.contain,
                       ),
                     ),
+                    // 경과 시간 오버레이 (모드 시작 이후에만 표시)
+                    if (_modeStart != null)
+                      Positioned(
+                        left: 8,
+                        bottom: 8,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.35),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            child: Builder(
+                              builder: (context) {
+                                final now = DateTime.now();
+                                final start = _modeStart!;
+                                final elapsed = now.difference(start);
+                                if (_mode == 'run') {
+                                  final m = elapsed.inMinutes;
+                                  return Text(
+                                    '$m분째 런닝중',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    ),
+                                  );
+                                } else {
+                                  final h = elapsed.inHours;
+                                  final m = elapsed.inMinutes % 60;
+                                  return Text(
+                                    '${h}시간 ${m}분째 숙면중',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                     // sleep 모드에서만 우측 상단에 'zzZ' 오버레이
                     if (_mode == 'sleep')
                       Positioned(
