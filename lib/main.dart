@@ -101,7 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    // 캐릭터 이미지
                     Positioned.fill(
                       child: Image.asset(
                         _currentImage,
