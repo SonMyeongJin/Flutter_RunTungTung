@@ -14,7 +14,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
   Timer? _timer;
   int _frame = 0; // 0 or 1
   late final DateTime _startAt;
-  static const int _goalMeters = 6000;
+  static const int _goalMeters = 1000;
   double _distanceMeters = 0;
   Position? _lastPos;
   StreamSubscription<Position>? _posSub;
@@ -187,8 +187,47 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
               ),
             ),
           ),
+          // Distance gauge (fills based on progress)
+          FractionallySizedBox(
+            widthFactor: baseWidthFactor,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final totalW = constraints.maxWidth;
+                    final progress = (_distanceMeters / _goalMeters).clamp(0.0, 1.0);
+                    final fillW = totalW * progress;
+                    return Stack(
+                      children: [
+                        Container(
+                          height: 12,
+                          color: Colors.black12,
+                        ),
+                        Positioned(
+                          left: 0,
+                          top: 0,
+                          bottom: 0,
+                          child: Container(
+                            width: fillW,
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF4FC3F7), Color(0xFF1976D2)],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
           Padding(
-            padding: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(bottom: 16),
             child: Text(
               '${_distanceMeters.toStringAsFixed(0)}m / ${_goalMeters}m',
               style: const TextStyle(
@@ -197,7 +236,7 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
               ),
             ),
           ),
-          const SafeArea(child: SizedBox(height: 4)),
+          const SafeArea(child: SizedBox(height: 8)),
         ],
       ),
     );
