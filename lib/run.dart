@@ -109,7 +109,8 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
       body: Column(
         children: [
           Expanded(
-            child: Center(
+            child: Align(
+              alignment: Alignment.bottomCenter,
               child: FractionallySizedBox(
                 widthFactor: baseWidthFactor,
                 child: Stack(
@@ -187,16 +188,16 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 30),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               '${_distanceMeters.toStringAsFixed(0)}m / ${_goalMeters}m',
               style: const TextStyle(
-                fontSize: 40,
+                fontSize: 32,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
-          const SafeArea(child: SizedBox(height: 12)),
+          const SafeArea(child: SizedBox(height: 4)),
         ],
       ),
     );
