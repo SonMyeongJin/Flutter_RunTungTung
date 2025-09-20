@@ -36,11 +36,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   StreamSubscription<Position>? _posSub;
   bool _navigated = false;
+  int _frame = 0; // 0 or 1 for sit1 / sit2
+  Timer? _sitAnimTimer;
+
+  static const _sitFrames = [
+    'assets/images/sit1.png',
+    'assets/images/sit2.png',
+  ];
 
   @override
   void initState() {
     super.initState();
     _startMovementDetection();
+  _startSitAnimation();
   }
 
   Future<void> _startMovementDetection() async {
@@ -82,7 +90,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     _posSub?.cancel();
+    _sitAnimTimer?.cancel();
     super.dispose();
+  }
+
+  void _startSitAnimation() {
+    _sitAnimTimer?.cancel();
+    _sitAnimTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+      if (!mounted) return;
+      setState(() {
+        _frame = 1 - _frame; // toggle 0 <-> 1
+      });
+    });
   }
 
   @override
@@ -92,8 +111,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Expanded(
+                child: Center(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: Image.asset(
+                      _sitFrames[_frame],
+                      key: ValueKey(_frame),
+                      width: 260,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
               Row(
                 children: [
                   Expanded(
