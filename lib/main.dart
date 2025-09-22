@@ -107,6 +107,50 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
+                child: const Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    '메뉴',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.directions_run),
+                title: const Text('달리기'),
+                onTap: () {
+                  Navigator.of(context).pop(); // close drawer
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const RunScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.bedtime),
+                title: const Text('잠자기'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SleepScreen()),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -125,30 +169,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const RunScreen()),
-                      ),
-                      icon: const Icon(Icons.directions_run),
-                      label: const Text('달리기'),
-                      style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(56)),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const SleepScreen()),
-                      ),
-                      icon: const Icon(Icons.bedtime),
-                      label: const Text('잠자기'),
-                      style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(56)),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 12),
+              const Text(
+                '왼쪽 상단 햄버거 메뉴를 열어 기능을 선택하세요',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
             ],
           ),
