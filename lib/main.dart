@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:run_tungtung/run.dart';
 import 'package:run_tungtung/sleep.dart';
+import 'package:run_tungtung/fat.dart';
 
 void main() {
   runApp(const MyApp());
@@ -144,6 +145,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const SleepScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.fastfood),
+                title: const Text('Fat 모드'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const FatScreen()),
                   );
                 },
               ),
