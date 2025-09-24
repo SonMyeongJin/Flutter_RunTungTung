@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.directions_run),
-                title: const Text('달리기'),
+                title: const Text('Run Mode'),
                 onTap: () {
                   Navigator.of(context).pop(); // close drawer
                   Navigator.of(context).push(
@@ -140,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.bedtime),
-                title: const Text('잠자기'),
+                title: const Text('Sleep Mode'),
                 onTap: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.fastfood),
-                title: const Text('Fat 모드'),
+                title: const Text('Pig Mode'),
                 onTap: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
