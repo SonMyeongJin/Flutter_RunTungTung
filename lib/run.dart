@@ -106,6 +106,9 @@ class _RunScreenState extends State<RunScreen> with SingleTickerProviderStateMix
     const double baseWidthFactor = 0.6; // 60%
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('런닝'),
+      ),
       body: Column(
         children: [
           Expanded(

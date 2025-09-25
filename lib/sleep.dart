@@ -81,6 +81,9 @@ class _SleepScreenState extends State<SleepScreen> {
     final double widthFactor = isSleep1 ? baseWidthFactor * 0.8 : baseWidthFactor;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('수면'),
+      ),
       body: Column(
         children: [
           Expanded(
