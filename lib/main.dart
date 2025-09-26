@@ -39,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _navigated = false;
   int _frame = 0; // 0 or 1 for sit1 / sit2
   Timer? _sitAnimTimer;
+  double _fullness = 0.7; // 0.0 ~ 1.0 포만감 (임시 고정 값)
 
   static const _sitFrames = [
     'assets/images/sit1.png',
@@ -177,6 +178,64 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: 260,
                       fit: BoxFit.contain,
                     ),
+                  ),
+                ),
+              ),
+              // 포만감 게이지
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 4),
+                child: SizedBox(
+                  height: 26,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              final w = constraints.maxWidth;
+                              final fillW = w * _fullness.clamp(0.0, 1.0);
+                              return Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black12,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: AnimatedContainer(
+                                      duration: const Duration(milliseconds: 400),
+                                      width: fillW,
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [Color(0xFFFFD54F), Color(0xFFF57C00)],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    child: Center(
+                                      child: Text(
+                                        '포만감 ${(100 * _fullness).round()}%',
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
