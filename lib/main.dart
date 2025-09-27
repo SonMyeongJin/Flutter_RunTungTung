@@ -170,13 +170,82 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Expanded(
                 child: Center(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: Image.asset(
-                      _sitFrames[_frame],
-                      key: ValueKey(_frame),
-                      width: 260,
-                      fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: 260,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // 캐릭터 이미지 (프레임 애니메이션)
+                        Positioned.fill(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            child: Image.asset(
+                              _sitFrames[_frame],
+                              key: ValueKey(_frame),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        // 귀여운 경고/주의 배지 (살짝 점프하는 효과)
+                        Positioned(
+                          top: -8,
+                          left: 0,
+                          right: 0,
+                          child: LayoutBuilder(
+                            builder: (context, _) {
+                              final scale = _frame == 0 ? 1.0 : 1.07; // 기존 프레임 토글에 맞춰 살짝 점프
+                              return Transform.scale(
+                                scale: scale,
+                                child: Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [Color(0xFFFFE5EC), Color(0xFFFFD1DC)],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius: BorderRadius.circular(22),
+                                      border: Border.all(color: const Color(0xFFFFB7C5), width: 1.5),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 5,
+                                          offset: Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: const [
+                                          Text('🐷', style: TextStyle(fontSize: 20)),
+                                          SizedBox(width: 8),
+                                          Flexible(
+                                            child: Text(
+                                              '운동이 필요해요!\n2일 뒤에 뚱뚱한 돼지가 될지도 몰라요 💦',
+                                              style: TextStyle(
+                                                fontSize: 15.5,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.black87,
+                                                height: 1.25,
+                                                letterSpacing: 0.3,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text('😭', style: TextStyle(fontSize: 20)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
