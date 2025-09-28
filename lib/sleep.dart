@@ -118,11 +118,11 @@ class _SleepScreenState extends State<SleepScreen> {
                                 final h = elapsed.inHours;
                                 final m = elapsed.inMinutes % 60;
                                 return Text(
-                                  '$h시간 $m분째 숙면중',
+                                  '$h시간 $m분째\n숙면중',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 30,
+                                    fontSize: 20,
                                   ),
                                 );
                               },
